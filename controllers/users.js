@@ -1,68 +1,77 @@
 const User = require('../models/user');
+const BadRequestErrors = require('../errors/BadRequestErrors');
+const NotFoundError = require('../errors/NotFoundError');
+const ServerErrors = require('../errors/ServerErrors');
 
-const getUsers = (_, res) => {
+const getUsers = (_, res, next) => {
   User.find({})
     .then((users) => res.status(200).send(users))
-    .catch((err) => {
-      res.status(500).send({ message: 'Произошла ошибка' });
-      console.log(err);
-      // console.log(err.name);
-      // console.log(err.message);
-      // console.log(err.errors);
+    .catch(() => {
+      next(new ServerErrors());
     });
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   User.findById(req.params.id)
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      res.status(500).send({ message: 'Произошла ошибка' });
-      console.log(err);
-      // console.log(err.name);
-      // console.log(err.message);
-      // console.log(err.errors);
+    .then((user) => {
+      if (!user) {
+        next(new NotFoundError());
+      }
+      res.send(user);
+    })
+    .catch(() => {
+      next(new ServerErrors());
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then((user) => res.status(200).send(user))
+    .then((user) => {
+      res.send(user);
+    })
     .catch((err) => {
-      res.status(500).send({ message: 'Произошла ошибка' });
-      console.log(err);
-      // console.log(err.name);
-      // console.log(err.message);
-      // console.log(err.errors);
+      if (err.name === 'ValidationError') {
+        next(new BadRequestErrors());
+      }
+      next(new ServerErrors());
     });
 };
 
-const updateProfile = (req, res) => {
+const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .then((user) => res.status(200).send(user))
+    .then((user) => {
+      if (!user) {
+        next(new NotFoundError());
+      }
+      res.send(user);
+    })
     .catch((err) => {
-      res.status(500).send({ message: 'Произошла ошибка' });
-      console.log(err);
-      // console.log(err.name);
-      // console.log(err.message);
-      // console.log(err.errors);
+      if (err.name === 'ValidationError') {
+        next(new BadRequestErrors());
+      }
+      next(new ServerErrors());
     });
 };
 
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .then((user) => res.status(200).send(user))
+    .then((user) => {
+      if (!user) {
+        next(new NotFoundError());
+      }
+      res.send(user);
+    })
     .catch((err) => {
-      res.status(500).send({ message: 'Произошла ошибка' });
-      console.log(err);
-      // console.log(err.name);
-      // console.log(err.message);
-      // console.log(err.errors);
+      if (err.name === 'ValidationError') {
+        next(new BadRequestErrors());
+      }
+      next(new ServerErrors());
     });
 };
 
