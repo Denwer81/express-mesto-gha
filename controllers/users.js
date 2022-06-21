@@ -15,15 +15,15 @@ const getUser = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
-        next(new NotFoundError());
+        return next(new NotFoundError());
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestErrors());
+        return next(new BadRequestErrors());
       }
-      next(new ServerErrors());
+      return next(new ServerErrors());
     });
 };
 
@@ -36,9 +36,9 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestErrors());
+        return next(new BadRequestErrors());
       }
-      next(new ServerErrors());
+      return next(new ServerErrors());
     });
 };
 
@@ -48,15 +48,15 @@ const updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        next(new NotFoundError());
+        return next(new NotFoundError());
       }
-      res.send(user);
+      return res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestErrors());
+        return next(new BadRequestErrors());
       }
-      next(new ServerErrors());
+      return next(new ServerErrors());
     });
 };
 
@@ -66,15 +66,15 @@ const updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        next(new NotFoundError());
+        return next(new NotFoundError());
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestErrors());
+        return next(new BadRequestErrors());
       }
-      next(new ServerErrors());
+      return next(new ServerErrors());
     });
 };
 
