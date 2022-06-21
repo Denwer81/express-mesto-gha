@@ -17,7 +17,7 @@ const getUser = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError());
       }
-      res.send(user);
+      return res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -68,7 +68,7 @@ const updateAvatar = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError());
       }
-      res.send(user);
+      return res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
