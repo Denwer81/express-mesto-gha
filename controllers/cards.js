@@ -32,7 +32,10 @@ const deleteCard = (req, res, next) => {
       }
       res.send(card);
     })
-    .catch(() => {
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestErrors());
+      }
       next(new ServerErrors());
     });
 };
@@ -65,15 +68,15 @@ const dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        next(new NotFoundError());
+        return next(new NotFoundError());
       }
-      res.send(card);
+      return res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestErrors());
+        return next(new BadRequestErrors());
       }
-      next(new ServerErrors());
+      return next(new ServerErrors());
     });
 };
 
