@@ -7,8 +7,9 @@ const NotFoundError = require('./errors/NotFoundError');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, _, res, next) => {
   res.status(err.code).send(err.message);
+
   next();
 };
 
@@ -27,8 +28,6 @@ app.use((req, _, next) => {
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 app.use((_, __, next) => next(new NotFoundError('Путь не найден')));
-// app.use((_, res) => res.status(404).send({ message: 'Путь не найден' }));
 app.use(errorHandler);
-// app.use('*', errorHandler(throw new ServerErrors()));
 
 app.listen(PORT);
