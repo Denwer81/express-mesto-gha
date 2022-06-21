@@ -19,7 +19,10 @@ const getUser = (req, res, next) => {
       }
       res.send(user);
     })
-    .catch(() => {
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestErrors());
+      }
       next(new ServerErrors());
     });
 };
