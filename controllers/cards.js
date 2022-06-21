@@ -3,10 +3,6 @@ const BadRequestErrors = require('../errors/BadRequestErrors');
 const NotFoundError = require('../errors/NotFoundError');
 const ServerErrors = require('../errors/ServerErrors');
 
-// console.log(err);
-// console.log(err.name);
-// console.log(err.message);
-
 const getCards = (_, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))
@@ -32,7 +28,7 @@ const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        next(new NotFoundError());
+        next(new BadRequestErrors());
       }
       res.send(card);
     })
