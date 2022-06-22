@@ -23,7 +23,7 @@ const createCard = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .orFail(next(new NotFoundError()))
+    .orFail(new NotFoundError())
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -38,7 +38,7 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(next(new NotFoundError()))
+    .orFail(new NotFoundError())
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -53,7 +53,7 @@ const dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(next(new NotFoundError()))
+    .orFail(new NotFoundError())
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
