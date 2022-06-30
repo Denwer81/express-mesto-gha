@@ -3,15 +3,30 @@ const mongoose = require('mongoose');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundError = require('./errors/NotFoundError');
+const { errors, handleError } = require('./midlewares/errors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
-const errorHandler = (err, _, res, next) => {
-  res.status(err.code).send(err.message);
+// const errorHandler = (err, _, res, next) => {
+//   console.log(err);
 
-  next();
-};
+//   // if (err.name === 'CastError' || err.name === 'ValidationError') {
+//   //   next(BadRequestErrors());
+//   // } if (err.code === 11000) {
+//   //   next(SingUpError());
+//   // } else {
+//   //   next(ServerError());
+//   // }
+
+//   res.status(err.code).send(err.message);
+
+//   next();
+
+//   // res.status(err.code).send(err.message);
+
+//   // next();
+// };
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
@@ -26,6 +41,7 @@ app.use((req, _, next) => {
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 app.use((_, __, next) => next(new NotFoundError('Путь не найден')));
-app.use(errorHandler);
+app.use(errors);
+app.use(handleError);
 
 app.listen(PORT);
