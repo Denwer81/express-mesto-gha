@@ -16,14 +16,13 @@ const {
 const urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
 
 usersRouter.get('/', getUsers);
+usersRouter.get('/me', getProfile);
 
 usersRouter.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().hex().length(24),
   }),
 }), getUser);
-
-usersRouter.get('/me', getProfile);
 
 usersRouter.patch('/me', celebrate({
   body: Joi.object().keys({
