@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
+
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundError = require('./errors/NotFoundError');
-const { errors, handleError } = require('./midlewares/errors');
+const { setError, handleError } = require('./midlewares/errors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -42,6 +44,7 @@ app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 app.use((_, __, next) => next(new NotFoundError('Путь не найден')));
 app.use(errors);
+app.use(setError);
 app.use(handleError);
 
 app.listen(PORT);

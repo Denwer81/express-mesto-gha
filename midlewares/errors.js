@@ -4,11 +4,11 @@ const NotFoundError = require('../errors/NotFoundError');
 const ServerError = require('../errors/ServerErrors');
 const SignUpError = require('../errors/SignUpErrors');
 
-const errors = (err, _, res, next) => {
-  // console.log(err);
-  // console.log(err.name);
-  // console.log(err.code);
-  // console.log(err.message);
+const setError = (err, _, __, next) => {
+  console.log(err);
+  console.log(err.name);
+  console.log(err.code);
+  console.log(err.message);
 
   if (err.name === 'CastError' || err.name === 'ValidationError') {
     throw new BadRequestErrors();
@@ -22,19 +22,22 @@ const errors = (err, _, res, next) => {
   if (!err.name && !err.name && !err.status) {
     throw new ServerError();
   } else {
-    res.status(err.code).send(err.message);
+    // res.status(err.code).send(err.message);
   }
 
   next();
 };
 
 const handleError = (err, _, res, next) => {
+  console.log(err.name);
+  console.log(err.code);
+  console.log(err.message);
   res.status(err.code).send(err.message);
 
   next();
 };
 
 module.exports = {
-  errors,
+  setError,
   handleError,
 };

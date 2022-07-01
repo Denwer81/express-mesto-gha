@@ -1,7 +1,12 @@
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const BadRequestErrors = require('../errors/BadRequestErrors');
 const NotFoundError = require('../errors/NotFoundError');
+
+// const {
+//   signUpValidtion,
+// } = require('../validation/JoiValidation');
 
 const getUsers = (_, res, next) => {
   User.find({})
@@ -17,6 +22,7 @@ const getUser = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
+  // console.log(signUpValidtion);
   const {
     email, password, name, about, avatar,
   } = req.body;
@@ -24,17 +30,28 @@ const createUser = (req, res, next) => {
   const isEmail = validator.isEmail(email);
 
   if (isEmail) {
-    User.create(
-      {
-        email, password, name, about, avatar,
-      },
-    )
-      .then((user) => res.send(user))
+    bcrypt.hash(password, 10)
+      .then((hash) => User.create(
+        {
+          email, password: hash, name, about, avatar,
+        },
+      ))
+      .then((user) => {
+        res.send({
+          _id: user._id, name: user.name, email: user.email, about: user.about, avatar: user.avatar,
+        });
+      })
       .catch(next);
   } else {
     next(new BadRequestErrors());
   }
 };
+
+// const login = (req, res) => {
+//   const { email, password } = req.body;
+
+//   // ...
+// };
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
