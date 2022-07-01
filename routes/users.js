@@ -1,5 +1,5 @@
 const usersRouter = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate } = require('celebrate');
 const {
   getUsers,
   getUser,
@@ -10,26 +10,18 @@ const {
 
 const {
   signUpValidtion,
+  updateProfileValidation,
+  updateAvatarValidation,
 } = require('../validation/JoiValidation');
-
-// const signUpValidtion = {
-//   body: Joi.object().keys({
-//     email: Joi.string().required().email(),
-//     password: Joi.string().required().min(8),
-//     name: Joi.string().min(2).max(30),
-//     about: Joi.string().min(2).max(30),
-//     avatar: Joi.string(),
-//   }),
-// };
 
 usersRouter.get('/', getUsers);
 
 usersRouter.get('/:id', getUser);
 
-usersRouter.post('/', createUser);
+usersRouter.post('/', celebrate(signUpValidtion), createUser);
 
-usersRouter.patch('/me', updateProfile);
+usersRouter.patch('/me', celebrate(updateProfileValidation), updateProfile);
 
-usersRouter.patch('/me/avatar', updateAvatar);
+usersRouter.patch('/me/avatar', celebrate(updateAvatarValidation), updateAvatar);
 
 module.exports = usersRouter;

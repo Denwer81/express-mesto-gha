@@ -5,12 +5,12 @@ const ServerError = require('../errors/ServerErrors');
 const SignUpError = require('../errors/SignUpErrors');
 
 const setError = (err, _, __, next) => {
-  console.log(err);
+  // console.log(err);
   console.log(err.name);
   console.log(err.code);
   console.log(err.message);
 
-  if (err.name === 'CastError' || err.name === 'ValidationError') {
+  if (err.name === 'CastError' || err.name === 'ValidationError' || err.message === 'Validation failed') {
     throw new BadRequestErrors();
   }
   if (err.code === 11000) {
