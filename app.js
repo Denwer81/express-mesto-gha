@@ -4,7 +4,7 @@ const { celebrate, errors } = require('celebrate');
 
 const { createUser, login } = require('./controllers/users');
 const { signUpValidtion } = require('./validation/JoiValidation');
-const { setError, handleError } = require('./midlewares/errors');
+const { setError, handleError } = require('./middlewares/errors');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundError = require('./errors/NotFoundError');
