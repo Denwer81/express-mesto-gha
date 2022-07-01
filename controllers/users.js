@@ -17,6 +17,14 @@ const getUser = (req, res, next) => {
     .catch(next);
 };
 
+const getProfile = (req, res, next) => {
+  console.log(req);
+  User.findById(req.user._id)
+    .orFail(new NotFoundError('Пользователь не найден'))
+    .then((profile) => res.send(profile))
+    .catch(next);
+};
+
 const createUser = (req, res, next) => {
   const {
     email, password, name, about, avatar,
@@ -54,7 +62,7 @@ const login = (req, res, next) => {
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-
+  console.log(req.user._id)
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(new NotFoundError())
     .then((user) => res.send(user))
@@ -73,6 +81,7 @@ const updateAvatar = (req, res, next) => {
 module.exports = {
   getUsers,
   getUser,
+  getProfile,
   login,
   createUser,
   updateProfile,

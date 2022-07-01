@@ -7,6 +7,7 @@ const { signUpValidtion } = require('./validation/JoiValidation');
 const { setError, handleError } = require('./middlewares/errors');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
@@ -16,16 +17,16 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(express.json());
 
-app.use((req, _, next) => {
-  req.user = { _id: '62b16aae5bfe40bf59ae391e' };
+// app.use((req, _, next) => {
+//   req.user = { _id: '62bf0b9af72e68346a8c9ff7' };
 
-  next();
-});
+//   next();
+// });
 
 app.post('/signin', login);
 app.post('/signup', celebrate(signUpValidtion), createUser);
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
 app.use((_, __, next) => next(new NotFoundError('Путь не найден')));
 app.use(errors);
 app.use(setError);
