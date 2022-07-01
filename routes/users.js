@@ -3,13 +3,11 @@ const { celebrate } = require('celebrate');
 const {
   getUsers,
   getUser,
-  createUser,
   updateProfile,
   updateAvatar,
 } = require('../controllers/users');
 
 const {
-  signUpValidtion,
   updateProfileValidation,
   updateAvatarValidation,
 } = require('../validation/JoiValidation');
@@ -17,8 +15,6 @@ const {
 usersRouter.get('/', getUsers);
 
 usersRouter.get('/:id', getUser);
-
-usersRouter.post('/', celebrate(signUpValidtion), createUser);
 
 usersRouter.patch('/me', celebrate(updateProfileValidation), updateProfile);
 

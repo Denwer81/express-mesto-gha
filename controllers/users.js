@@ -1,12 +1,8 @@
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
-const User = require('../models/user');
-const BadRequestErrors = require('../errors/BadRequestErrors');
-const NotFoundError = require('../errors/NotFoundError');
+const jwt = require('jsonwebtoken');
 
-// const {
-//   signUpValidtion,
-// } = require('../validation/JoiValidation');
+const User = require('../models/user');
+const NotFoundError = require('../errors/NotFoundError');
 
 const getUsers = (_, res, next) => {
   User.find({})
@@ -22,36 +18,39 @@ const getUser = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  // console.log(signUpValidtion);
   const {
     email, password, name, about, avatar,
   } = req.body;
 
-  const isEmail = validator.isEmail(email);
-
-  if (isEmail) {
-    bcrypt.hash(password, 10)
-      .then((hash) => User.create(
-        {
-          email, password: hash, name, about, avatar,
-        },
-      ))
-      .then((user) => {
-        res.send({
-          _id: user._id, name: user.name, email: user.email, about: user.about, avatar: user.avatar,
-        });
-      })
-      .catch(next);
-  } else {
-    next(new BadRequestErrors());
-  }
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create(
+      {
+        email, password: hash, name, about, avatar,
+      },
+    ))
+    .then((user) => {
+      res.send({
+        _id: user._id, name: user.name, email: user.email, about: user.about, avatar: user.avatar,
+      });
+    })
+    .catch(next);
 };
 
-// const login = (req, res) => {
-//   const { email, password } = req.body;
+const login = (req, res, next) => {
+  const { email, password } = req.body;
 
-//   // ...
-// };
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        'some-secret-key',
+        { expiresIn: '7d' },
+      );
+
+      res.send({ token });
+    })
+    .catch(next);
+};
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
@@ -74,6 +73,7 @@ const updateAvatar = (req, res, next) => {
 module.exports = {
   getUsers,
   getUser,
+  login,
   createUser,
   updateProfile,
   updateAvatar,

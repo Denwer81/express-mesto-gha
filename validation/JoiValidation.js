@@ -1,6 +1,6 @@
 const { Joi } = require('celebrate');
 
-const urlRegEx = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
+const urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
 
 const id = Joi.string().required().hex().length(24);
 
@@ -17,7 +17,7 @@ const signUpValidtion = {
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(urlRegEx),
+    avatar: Joi.string().regex(urlRegex),
   }),
 };
 
@@ -30,7 +30,7 @@ const updateProfileValidation = {
 
 const updateAvatarValidation = {
   body: Joi.object().keys({
-    avatar: Joi.string().required().regex(urlRegEx),
+    avatar: Joi.string().required().regex(urlRegex),
   }),
 };
 
@@ -43,7 +43,7 @@ const getUserValidation = {
 const createCardValidation = {
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().regex(urlRegEx),
+    link: Joi.string().required().regex(urlRegex),
   }),
 };
 
