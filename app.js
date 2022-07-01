@@ -4,7 +4,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 
 const { createUser, login } = require('./controllers/users');
 // const { signUpValidtion } = require('./validation/JoiValidation');
-const { setError, handleError } = require('./middlewares/errors');
+const { setError } = require('./middlewares/errors');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
@@ -27,8 +27,8 @@ const urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
-    title: Joi.string().required().min(2).max(30),
-    text: Joi.string().required().min(2),
+    email: Joi.string().required(),
+    password: Joi.string().required(),
   }),
 }), login);
 app.post('/signup', celebrate({
@@ -45,6 +45,6 @@ app.use('/cards', auth, cardsRouter);
 app.use((_, __, next) => next(new NotFoundError('Путь не найден')));
 app.use(errors);
 app.use(setError);
-app.use(handleError);
+// app.use(handleError);
 
 app.listen(PORT);
