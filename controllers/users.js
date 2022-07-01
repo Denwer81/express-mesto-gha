@@ -11,14 +11,15 @@ const getUsers = (_, res, next) => {
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.params.id)
+  // console.log(req.params.id);
+  User.findById(req.params.userId)
     .orFail(new NotFoundError())
     .then((user) => res.send(user))
     .catch(next);
 };
 
 const getProfile = (req, res, next) => {
-  console.log(req);
+  // console.log(req);
   User.findById(req.user._id)
     .orFail(new NotFoundError('Пользователь не найден'))
     .then((profile) => res.send(profile))
@@ -62,7 +63,7 @@ const login = (req, res, next) => {
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  console.log(req.user._id);
+  // console.log(req.user._id);
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(new NotFoundError())
     .then((user) => res.send(user))
