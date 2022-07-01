@@ -2,7 +2,7 @@ const { Joi } = require('celebrate');
 
 const urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
 
-const id = Joi.string().required().hex().length(24);
+const id = Joi.string().required().alphanum().length(24);
 
 const signInValidation = {
   body: Joi.object().keys({

@@ -62,7 +62,7 @@ const login = (req, res, next) => {
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  console.log(req.user._id)
+  console.log(req.user._id);
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(new NotFoundError())
     .then((user) => res.send(user))
