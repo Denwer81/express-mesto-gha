@@ -26,7 +26,7 @@ const setError = (err, _, res, next) => {
   if (!err.name && !err.name && !err.status) {
     throw new ServerError(err.message.message);
   } else {
-    // res.status(err.code).send(err.message);
+    res.status(err.code).send(err.message);
   }
 
   next();
