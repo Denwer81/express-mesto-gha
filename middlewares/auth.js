@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+
 const AuthError = require('../errors/AuthErrors');
 
 module.exports = (req, _, next) => {
@@ -19,7 +20,6 @@ module.exports = (req, _, next) => {
     return;
   }
 
-  // console.log(payload);
   req.user = payload;
   next();
 };

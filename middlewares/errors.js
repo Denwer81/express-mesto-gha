@@ -6,10 +6,10 @@ const SignUpError = require('../errors/SignUpErrors');
 const AuthError = require('../errors/AuthErrors');
 
 const setError = (err, _, res, next) => {
-  // console.log(err);
-  // console.log(err.name);
-  // console.log(err.code);
-  // console.log(err.message);
+  console.log(err);
+  console.log(err.name);
+  console.log(err.code);
+  console.log(err.message);
 
   if (err.code === 11000) {
     res

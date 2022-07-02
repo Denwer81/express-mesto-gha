@@ -11,7 +11,6 @@ const getUsers = (_, res, next) => {
 };
 
 const getUser = (req, res, next) => {
-  // console.log(req.params.id);
   User.findById(req.params.userId)
     .orFail(new NotFoundError())
     .then((user) => res.send(user))
@@ -19,7 +18,6 @@ const getUser = (req, res, next) => {
 };
 
 const getProfile = (req, res, next) => {
-  // console.log(req);
   User.findById(req.user._id)
     .orFail(new NotFoundError('Пользователь не найден'))
     .then((profile) => res.send(profile))
@@ -39,7 +37,11 @@ const createUser = (req, res, next) => {
     ))
     .then((user) => {
       res.send({
-        _id: user._id, name: user.name, email: user.email, about: user.about, avatar: user.avatar,
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        about: user.about,
+        avatar: user.avatar,
       });
     })
     .catch(next);
@@ -50,11 +52,7 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        'some-secret-key',
-        { expiresIn: '7d' },
-      );
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
 
       res.send({ token });
     })
@@ -63,7 +61,6 @@ const login = (req, res, next) => {
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  // console.log(req.user._id);
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(new NotFoundError())
     .then((user) => res.send(user))
