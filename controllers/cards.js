@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
-const ForbidenErrors = require('../errors/ForbidenErrors');
+const ForbidenError = require('../errors/ForbidenErrors');
 
 const getCards = (_, res, next) => {
   Card.find({})
@@ -16,24 +16,16 @@ const createCard = (req, res, next) => {
     .catch(next);
 };
 
-// const deleteCard = (req, res, next) => {
-//   Card.findByIdAndRemove(req.params.cardId)
-//     .orFail(new NotFoundError())
-//     .then((card) => res.send(card))
-//     .catch(next);
-// };
-
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(new NotFoundError())
-    .populate('owner')
     .then((card) => {
       if (card.owner._id.toString() === req.user._id) {
-        return Card.findByIdAndRemove(req.params.cardId)
-          .then((deletedCard) => res.send(deletedCard));
+        return Card.findByIdAndRemove(req.params.cardId);
       }
-      return new ForbidenErrors();
+      return next(new ForbidenError());
     })
+    .then((card) => res.send(card))
     .catch(next);
 };
 

@@ -1,9 +1,8 @@
-// const AuthError = require('../errors/AuthErrors');
 const setError = (err, _, res, next) => {
-  // console.log(err);
-  // console.log(err.name);
-  // console.log(err.code);
-  // console.log(err.message);
+  console.log(err);
+  console.log(err.name);
+  console.log(err.code);
+  console.log(err.message);
 
   if (err.code === 11000) {
     res
@@ -23,12 +22,11 @@ const setError = (err, _, res, next) => {
 
     return;
   }
+  if (err.code === undefined) {
+    res.status(500).send({ message: 'На сервере произошла ошибка' });
+  }
 
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
+  res.status(err.code).send(err.message);
 
   next();
 };
