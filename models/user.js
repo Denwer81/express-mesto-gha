@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const { isEmail, isURL } = require('validator');
 
-// const AuthError = require('../errors/AuthErrors');
+const AuthError = require('../errors/AuthErrors');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -40,25 +40,24 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// userSchema.statics.findUserByCredentials = function (email, password) {
-//   return this.findOne({ email })
-//     .select('+password')
-//     .then((user) => {
-//       if (!user) {
-//         return Promise.reject(new AuthError());
-//       }
-
-//       return bcrypt.compare(password, user.password)
-//         .then((matched) => {
-//           if (!matched) {
-//             return Promise.reject(new AuthError());
-//           }
-
-//           return user;
-//         });
-//     });
-// };
-
 // eslint-disable-next-line
+userSchema.statics.findUserByCredentials = function (email, password) {
+  return this.findOne({ email })
+    .select('+password')
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new AuthError());
+      }
+
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            return Promise.reject(new AuthError());
+          }
+
+          return user;
+        });
+    });
+};
 
 module.exports = mongoose.model('user', userSchema);
