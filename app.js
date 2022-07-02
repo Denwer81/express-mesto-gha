@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const helmet = require('helmet')
+const helmet = require('helmet');
 const { celebrate, errors } = require('celebrate');
 
 const { createUser, login } = require('./controllers/users');
