@@ -21,7 +21,6 @@ const setError = (err, _, res, next) => {
     return;
   }
   if (err.message === 'Validation failed' || err.name === 'CastError') {
-    // next(new BadRequestErrors());
     res
       .status(400)
       .send({
