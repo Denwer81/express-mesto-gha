@@ -19,9 +19,12 @@ app.use(express.json());
 
 app.post('/signin', celebrate(signInValidation), login);
 app.post('/signup', celebrate(signUpValidtion), createUser);
+
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
+
 app.use((_, __, next) => next(new NotFoundError('Путь не найден')));
+
 app.use(errors());
 app.use(setError);
 
