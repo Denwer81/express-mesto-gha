@@ -1,6 +1,5 @@
 const { Joi } = require('celebrate');
-
-const urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
+const urlRegex = require('../regex/regex');
 
 const signInValidation = {
   body: Joi.object().keys({
@@ -47,7 +46,7 @@ const createCardValidation = {
 
 const cardValidation = {
   params: Joi.object().keys({
-    cardId: Joi.string().required().alphanum().length(24),
+    cardId: Joi.string().required().hex().length(24),
   }),
 };
 
