@@ -1,5 +1,5 @@
 const { Joi } = require('celebrate');
-const urlRegex = require('../regex/regex');
+const { urlRegex } = require('../regex/regex');
 
 const signInValidation = {
   body: Joi.object().keys({
