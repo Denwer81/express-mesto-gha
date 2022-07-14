@@ -3,13 +3,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 
-// const { createUser, login } = require('./controllers/users');
-// const { signUpValidtion, signInValidation } = require('./validation/JoiValidation');
-// const auth = require('./middlewares/auth');
-// const usersRouter = require('./routes/users');
-// const cardsRouter = require('./routes/cards');
 const { setError } = require('./middlewares/errors');
-// const NotFoundError = require('./errors/NotFoundError');
 const mainRouter = require('./routes/mainRouter');
 
 const { PORT = 3000 } = process.env;
@@ -22,20 +16,6 @@ app.use(express.json());
 app.use(helmet());
 
 app.use(mainRouter);
-
-// app.get('/crash-test', () => {
-//   setTimeout(() => {
-//     throw new Error('Сервер сейчас упадёт');
-//   }, 0);
-// });
-
-// app.post('/signin', celebrate(signInValidation), login);
-// app.post('/signup', celebrate(signUpValidtion), createUser);
-
-// app.use('/users', auth, usersRouter);
-// app.use('/cards', auth, cardsRouter);
-
-// app.use((_, __, next) => next(new NotFoundError('Путь не найден')));
 
 app.use(errors());
 app.use(setError);

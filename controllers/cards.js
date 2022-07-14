@@ -18,16 +18,29 @@ const createCard = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .orFail(new NotFoundError())
+    .orFail(() => new NotFoundError())
     .then((card) => {
-      if (card.owner._id.toString() === req.user._id) {
-        return Card.findByIdAndRemove(req.params.cardId);
+      if (card.owner._id.toString() !== req.user._id) {
+        return next(new ForbidenError());
       }
-      return next(new ForbidenError());
+      return card.remove()
+        .then((deleted) => res.send(deleted));
     })
-    .then((card) => res.send(card))
     .catch(next);
 };
+
+// const deleteCard = (req, res, next) => {
+//   Card.findById(req.params.cardId)
+//     .orFail(new NotFoundError())
+//     .then((card) => {
+//       if (card.owner._id.toString() === req.user._id) {
+//         return card.remove();
+//       }
+//       return next(new ForbidenError());
+//     })
+//     .then((card) => res.send(card))
+//     .catch(next);
+// };
 
 const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
