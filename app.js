@@ -10,7 +10,7 @@ const { errors } = require('celebrate');
 // const cardsRouter = require('./routes/cards');
 const { setError } = require('./middlewares/errors');
 // const NotFoundError = require('./errors/NotFoundError');
-const mainRouter = require('./routes/mainRoutes');
+const mainRouter = require('./routes/mainRouter');
 
 const { PORT = 3000 } = process.env;
 const app = express();
